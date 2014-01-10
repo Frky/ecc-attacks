@@ -70,6 +70,7 @@
 % \documentclass[journal]{../sty/IEEEtran}
 
 
+\usepackage{algorithm2e}
 
 
 
@@ -619,6 +620,52 @@ Subsubsection text here.
 % stfloats package.
 
 
+\section{The sensible point: double and add}
+
+{\it From this point, we will focus until the end of the paper on vulnerabilities on the "double and add" algorithm. 
+In this section, we will explain why it is interesting to study this particular algorithm, and also why it is the main sensitive point
+of elliptic curve cryptography algorithms.}
+
+\subsection{The double-and-add algorithm}
+
+\subsubsection{Principle}
+The "double and add" algorithm is a very useful algorithm in {\tt ECC}, because it is used to compute the scalar multiplication on elliptic curve ; 
+exactly in the same way that modular exponentiation is central in most of arithmetic cryptography schemes. For many classical cryptographic schemes, 
+at some point we will need to compute $x^k mod p$, where (usually) $k$ is related to the secret key (or the private key). For instance, in {\tt RSA}, 
+
+\subsection{Algorithm}
+The basic algorithm for double-and-add is given in Algorithm \ref{d-and-a-algo}.
+
+\begin{algorithm}
+%    \SetLine % For v3.9
+    \SetAlgoLined % For previous releases [?]
+   
+    \SetKwComment{tcc}{/* }{ */}
+    \SetSideCommentLeft 
+    \SetNoFillComment
+
+    \KwData{P: base point ; d: scalar}
+    
+    \KwResult{Q = [d]P resulting point}
+    
+    Q $\leftarrow$ 0\;
+    l $\leftarrow$ $log_2(d)$\;
+    \For{i from l downto 0}{
+        \tcc{Using point doubling}
+        Q $\leftarrow$ Q * Q\; 
+        \If{d[i] == 1}{
+            \tcc{Using point adding}
+            Q $\leftarrow$ Q + P\; 
+        }
+    }
+    \Return{Q}
+
+    \bigskip
+
+    \caption{Basic Double-and-Add algorithm}
+    \label{d-and-a-algo}
+
+\end{algorithm}
 
 \section{Conclusion}
 The conclusion goes here.
