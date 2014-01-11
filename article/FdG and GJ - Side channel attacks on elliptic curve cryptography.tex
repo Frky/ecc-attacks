@@ -632,8 +632,18 @@ of elliptic curve cryptography algorithms.}
 The "double and add" algorithm is a very useful algorithm in {\tt ECC}, because it is used to compute the scalar multiplication on elliptic curve ; 
 exactly in the same way that modular exponentiation is central in most of arithmetic cryptography schemes. For many classical cryptographic schemes, 
 at some point we will need to compute $x^k mod p$, where (usually) $k$ is related to the secret key (or the private key). For instance, in {\tt RSA}, 
+the ciphering of a message $m$ with a private key $(N, e)$ is the following: 
+$$ c = m^e~mod~N $$
 
-\subsection{Algorithm}
+With {\tt El Gamal}, the encryption scheme also includes a step of modular exponentiation with a secret element:
+$$ s = h^y~mod~q$$
+where $y$ is a random integer in $\{1, .., q-1\}$. The knowledge of $y$ leads to the knowledge of the plaintext without need of the private key. 
+More details in appendix \ref{ElGamal}.\\
+
+In both cases we can see that a weakness on the modular exponentiation that allows to deduce the exponent would lead to an attack.
+In the same way, 
+
+\subsubsection{Algorithm}
 The basic algorithm for double-and-add is given in Algorithm \ref{d-and-a-algo}.
 
 \begin{algorithm}
@@ -690,8 +700,65 @@ The conclusion goes here.
 
 
 \appendices
-\section{Proof of the First Zonklar Equation}
-Appendix one text goes here.
+\section{Details on El Gamal and modular exponentiation}
+\label{ElGamal}
+Let us recall the generic {\tt El Gamal} key generaton (Algorithm \ref{el-gamal-key})
+and the encryption scheme (Algorithm \ref{el-gamal-encryption}).
+Theorically, the cipher cannot be decrypted without the knowledge of $x$. But if we consider that
+the modular exponentiation leaks some information about $y$, then it is possible to retreive $m$ without $x$.
+Indeed, from $y$ we can compute $s = h^y$, and then the message $m$ is obtained by computing $m = c' * s^{-1}$.
+
+\begin{algorithm}
+%    \SetLine % For v3.9
+    \SetAlgoLined % For previous releases [?]
+   
+    \SetKwComment{tcc}{/* }{ */}
+    \SetSideCommentLeft 
+    \SetNoFillComment
+
+    \KwData{G: cyclic group, g: generator of G, q; order of G}
+    
+    \KwResult{h: public key, x: private key}
+    
+    x $\leftarrow$ random(1, q-1)\;
+    h $\leftarrow$ $g^x$\;
+
+    \Return{(h, x)}
+
+    \bigskip
+
+    \caption{Key generation for El Gamal}
+    \label{el-gamal-key}
+
+\end{algorithm}
+
+\begin{algorithm}
+%    \SetLine % For v3.9
+    \SetAlgoLined % For previous releases [?]
+   
+    \SetKwComment{tcc}{/* }{ */}
+    \SetSideCommentLeft 
+    \SetNoFillComment
+
+    \KwData{m: message, G: cyclic group, g: generator of G, q: order of G, h: public key}
+    
+    \KwResult{(c, c'): cipher of m}
+    
+    y $\leftarrow$ random(1, q-1)\;
+    c $\leftarrow$ $g^y$
+    s $\leftarrow$ $h^y$\;
+    \tcc{Conversion from a message to an element of the group G}
+    m' $\leftarrow$ message\_to\_el(m)\;
+    c' $\leftarrow$ m' * s\;
+    \Return{(c, c')}
+
+    \bigskip
+
+    \caption{Encryption scheme for El Gamal}
+    \label{el-gamal-encryption}
+
+\end{algorithm}
+
 
 % you can choose not to have a title for an appendix
 % if you want by leaving the argument blank
