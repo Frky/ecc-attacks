@@ -636,6 +636,7 @@ More on genericity of those two algorithms
 in section \ref{genericity}.\\
 
 \subsubsection{Algorithm}
+\label{sensible-point-algo}
 The basic algorithm for double-and-add is given in Algorithm \ref{d-and-a-algo}.
 
 \begin{algorithm}
@@ -654,7 +655,7 @@ The basic algorithm for double-and-add is given in Algorithm \ref{d-and-a-algo}.
     l $\leftarrow$ $log_2(d)$\;
     \For{i from l downto 0}{
         \tcc{Using point doubling}
-        Q $\leftarrow$ Q * Q\; 
+        Q $\leftarrow$ [2]Q\; 
         \If{d[i] == 1}{
             \tcc{Using point adding}
             Q $\leftarrow$ Q + P\; 
@@ -771,7 +772,14 @@ deals with fault attacks.
 \section{Fault attacks}
 \label{fault}
 
-\subsection{Malicious input $P$}
+\subsection{Asumptions}
+In this section, we will deal with fault attacks. We will assume that an attacker is able to change bits of the registers
+during the computation. We will not discuss here if this fault model is relevant or not, but for further information, 
+refer to .
+%%TODO REFERENCE fault attacks
+
+\subsection{Malicious input $P'$}
+\label{malicious}
 This attack is not, properly speaking, a fault attack as it is not needed to introduce any 
 error during the computation. It relies, however, on the fact that a double-and-add algorithm 
 do not check if the point $P$ given as an input is indeed a point on the elliptic curve $E$.
@@ -795,6 +803,53 @@ that if the double-and-add algorithm does not check if $P \in E$ before computin
 give as an input $P_i \in E'$, of order $p_i$. The algorithm will compute $[d]P_i \in E'$, and then it leads to a DLP on a smaller 
 group (of order $p_i$) that is easier to solve. By doing that with several $P_i$ of different orders $p_i$, and finally using 
 the Chinese Reminder Theorem, it is possible to retreive $d$.
+
+\subsection{Fault injection at the beginning of the double-and-add}
+Let $E = (a_1, a_2, a_3, a_4, a_6)$ be an elliptic curve over $K$.
+We consider here that the algorithm check if the point given in input $P$ belongs
+to the curve $E$ before starting the multiplication. If not, it returns {\tt failure}.\\
+
+\subsubsection{Basic idea}
+This attacks consists of giving a valid point $P$ as an input of the algotihm, and to 
+inject a fault just after the verification. The result of the fault will be a change of the
+stored value of $P$ to another value $P'$, which differs from $P$ by exactly one bit. 
+However, the attacker is not able to know which bit was affected by the fault, so he 
+does not know the point $P'$. \\
+
+\subsubsection{Injection consequences}
+With the fault injection, the algorithm will compute the value of $[d]P'$, with $P'$ very unlikely
+belonging to $E$. We are in a very similar case to the attack described in \ref{malicious}, except that
+there are some information missing. \\
+
+\subsubsection{Getting back information}
+At this point, we do not know $P'$, neither do we know the elliptic curve $E' = (a_1, a_2, a_3, a_4, a_6')$
+such that $P' \in E'$. But using the output of the algorithm, we are able to recover these two pieces of information.
+Indeed, if $P' \notin E$, then we can find $a_6'$ such that $P' \in E'$ with $E' = (a_1, a_2, a_3, a_4, a_6')$. $a_6'$ is uniquely determined by solving
+the system given by $[d]P' \in E'$, where $[d]P'$ is known (it is the output of the algorithm), 
+and all $a_i$ for $i \in \{1, .., 4\}$ are known. 
+Once we know $E'$, we can find out $P'$ by testing all the points that differ of one bit from $P$, until we get a point that belongs to $E'$.
+At this point, we have reduced the DLP in $E$ to a DLP on $E'$. \\
+
+\subsubsection{Drawback}
+This attack does not allow the attacker to choose $P'$ nor $E'$, so it relies on a part of luck to perform an attack
+that leads to an easier DLP problem on $E'$ (in fact we need $E'$ to have a small divisor to be able to
+get information about $d$). This attack will need several tries to recover the exact value of $d$.
+
+\subsection{Fault injection during the double-and-add}
+In this section, we will present an attack that allows the attacker to retrieve $d$ in polynomial time, by
+introducing faults during the double-and-add computation. We will base the explanation on the algorithm given
+in section \ref{sensible-point-algo} (Algorithm \ref{d-and-a-algo}).\\
+
+\subsubsection{Notations}
+We will use notations very similar to  %TODO REFERENCE ARTICLE
+. Let $d$ be the scalar, $n$ the length of $d$ in binary representation. We denote by $d[i]$ the $i^{th}$ bit of $d$, 
+where $d[0]$ is the most significant bit of $d$. We denote by $Q^{(i)}$ the state of the variable $Q$ before the $i^{th}$ iteration.
+
+\subsubsection{Basic idea} 
+After a first computation of $Q = [d]P$ for a given $P$ (in order to know the correct result of the scalar multiplication), the main idea 
+is to introduce a one-bit fault during the $i^{th}$ iteration of the algorithm on $Q^{(i)}$, so that the end of the computation
+will be performed starting from $Q'^{(i)}$. 
+
 
 \section{Conclusion}
 The conclusion goes here.
