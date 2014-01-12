@@ -744,22 +744,72 @@ deals with fault attacks.
 
 
 
-\section{Non-invasive attacks}
+\section{Non-intrusive attacks}
+\label{non-intrusive}  
 
-Non-invasive attacks are attacks which do not destroy or alter the functioning of the device. Besides they cannot be detected by the user of the card. 
- 
-\label{non-invasive}    
+Non-intrusive attacks are attacks which do not destroy or alter the functioning of the device. Besides they cannot be detected by the user of the card. 
+   
     \subsection{Timing attacks}
 
-Timing attack was the first side-channel attack and one of the simplest. They consist in measuring the time dedicated to the computation of an algoritm. With this time, we can deduce how many time the program runs into a given loop. \\
+Timing attack was the first side-channel attack and one of the simplest. They consist in measuring the time dedicated to the computation of an algoritm. With this time, we can deduce how many times the program runs into a given loop.
+To protect against these attacks, implementations of an algorithm have to do the same number of loop, whatever the imput of the loop condition is. \\
 
-Today, timing attack are no longer considered because power analysis attacks are more efficient and as simple to set up. ALmost no timing attacks against ECC have been published.
+Today, timing attack are no longer considered because power analysis attacks are more efficient and are as simple to set up. Almost no timing attacks against ECC have been published.
 
     \subsection{Power analysis attacks}
 
-The goal is to measure the power consumption of the device while it is running the program.
+The goal is to measure the power consumption of the device while it is running the program. To set up these attacks, we need an oscilloscope and a card reader.
+
+Two methods are used to exact the key, the simple power analysis (SPA) and the differential power analysis (DPA). We will go further these two methods.
+
         \subsubsection{SPA}
+
+With simple power analysis, we just need one curve corresponding to one measurement of the consumption. From this curve, we can guess the secret key because each operation does not have the same power consumption. For instance with elliptic curve, the point adding is more expensive than the point doubling. In the basic double-and-add algorithm, we can know at each step if the addition is computed, if it is the case then we know that $ d[i]==1 $. At the end we are able to know the entire private key. Besides, an attacker can recognize point doubling from point adding because point adding cannot occurs twice at the time, it is only possible for point doubling.\\
+
+To protect against SPA, we need that the algorithm always perform the same operations. Here is an implementation of the double-and-add not vulnerable to SPA.
+
+\begin{algorithm}
+%    \SetLine % For v3.9
+    \SetAlgoLined % For previous releases [?]
+   
+    \SetKwComment{tcc}{/* }{ */}
+    \SetSideCommentLeft 
+    \SetNoFillComment
+
+    \KwData{P: base point ; d: scalar}
+    
+    \KwResult{Q = [d]P resulting point}
+    
+    Q $\leftarrow$ 0\;
+    R $\leftarrow$ 0\;
+    l $\leftarrow$ $log_2(d)$\;
+    \For{i from l downto 0}{
+        \tcc{Using point doubling}
+        Q $\leftarrow$ [2]Q\; 
+        \If{d[i] == 1}{
+            \tcc{Using point adding}
+            Q $\leftarrow$ Q + P\; 
+        } \Else {
+	    \tcc{R is not used}
+	    R $\leftarrow$ Q + P\; 
+	}
+    }
+    \Return{Q}
+
+    \bigskip
+
+    \caption{Resistent Double-and-Add algorithm}
+\end{algorithm}
+
+As you can see here, the addition is always performed but the result is not used when the corresponding bit is not equal to 1. Then at each step, the amount of power consumed is the same.\\
+
         \subsubsection{DPA}
+
+SPA relies mainly on software leaks contrary to differential power analysis which exploit the hamming weight of manipulated data. DPA requires a lot of experimentations, and acquisition of many power consumption curves. Usually we need many thousands curves. The goal is to collect a lot of curves corresponding to encryptions with different known messages at each step (but the same key). Then the attacker makes some assumptions about few bits of the key and he uses these to compute intermediate values of the encryption algorithm. Then the attacker sort the set of curves into two sets, according to the power consumption at the point where he computed intermediate values. By making the substraction between the mean of each set, the attacker can know if his supposition was true or not. \\
+
+To succded with DPA, we need that the key is the same at each acquisition, which is not the case in randomized algorithms such as ECDSA or HECDSA. Nevertheless some elliptic curve algorithm are vulnerable, such as the EC ElGamal.\\
+
+A countermeasure is to randomized intermediate values of the algorithm. For instance in elliptic curve, we can randomize the curve or the coordinates of the basis of calculation. Some other countermeasures are  in hardware, they try to change the power consumption model in order to it depends less on the hamming weight of data or it increases noise to prevent recognition from curves.
         
 \section{Fault attacks}
 \label{fault}
@@ -845,7 +895,9 @@ will be performed starting from $Q'^{(i)}$.
 
 \section{Conclusion}
 The conclusion goes here.
+[...]
 
+We saw that each countermeasure increase the cost of the algorithm. This can be a problem with embedded device, they do not have a big computational power.
 
 \clearpage
 
