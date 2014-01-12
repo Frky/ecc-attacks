@@ -502,31 +502,14 @@ ECC, Side channel attacks, Timing attack, Power consumtion attack, DPA, double a
 
 
 \section{Introduction}
-% The very first letter is a 2 line initial drop letter followed
-% by the rest of the first word in caps.
-% 
-% form to use if the first word consists of a single letter:
-% \IEEEPARstart{A}{demo} file is ....
-% 
-% form to use if you need the single drop letter followed by
-% normal text (unknown if ever used by IEEE):
-% \IEEEPARstart{A}{}demo file is ....
-% 
-% Some journals put the first two words in caps:
-% \IEEEPARstart{T}{his demo} file is ....
-% 
-% Here we have the typical use of a "T" for an initial drop letter
-% and "HIS" in caps to complete the first word.
-\IEEEPARstart{T}{his} demo file is intended to serve as a ``starter file''
-for IEEE journal papers produced under \LaTeX\ using
-IEEEtran.cls version 1.7 and later.
-% You must have at least 2 lines in the paragraph with the drop letter
-% (should never be an issue)
-I wish you the best of success.
 
-\hfill mds
- 
-\hfill January, 2014
+\IEEEPARstart{S}{ide-channel} attacks take advantage of the interaction between a module and its environment when it uses sensitive data. Most of the time, it applies to the embedded world, such as smartcards which are frequently used with cryptography to authenticate a user. Such channel can be measurement of the time, power analysis, electro-magnetic analysis or acoustic analysis.\\
+
+These channels will allow us to find some secret information beacause of two main points. We can have software or hardware leaks. Software leaks are due to branching condition in algorithms. Depending on the branch taken by the program, operations will not be the same. With these channels, we are able to detect what branch was taken. Second point is hardware leaks, each operation made by the processor consumes an amount of power which depends on the hamming weight of the value of manipulated data.\\
+
+This issue is at the heart of embedded security, a lot of research papers are published every month and attacks are more and more sophisticated. Last month, Daniel Genkin, Adi Shamir and Eran Tromer published a paper entitled "RSA Key Extraction via Low-Bandwidth Acoustic Cryptanalysis" where they showed that they can retreive a RSA key using a standard microphone to listen the noise emitted by a processor.\\
+
+In this article, we will present several side-channel attacks and apply them to elliptic curve cryptanalysis. Then, we will show how we can protect ourselves from these attacks.
 
 
 % needed in second column of first page if using \IEEEpubid
@@ -761,8 +744,11 @@ deals with fault attacks.
 
 
 
-\section{Non-intrusive attacks}
-\label{non-intrusive}    
+\section{Non-invasive attacks}
+
+Non-invasive attacks are attacks which do not destroy or alter the functioning of the device. Besides they cannot be detected by the user of the card. 
+ 
+\label{non-invasive}    
     \subsection{Timing attacks}
 
     \subsection{Power analysis attacks}
@@ -991,9 +977,8 @@ This formulas given can be retreived by using the "chord and tangent" method to 
 % (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
 
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+\bibitem{IEEEhowto:acoustic}
+Daniel Genkin, Adi Shamir, Eran Tromer \emph{RSA Key Extraction via Low-Bandwidth Acoustic Cryptanalysis},
 
 \end{thebibliography}
 
