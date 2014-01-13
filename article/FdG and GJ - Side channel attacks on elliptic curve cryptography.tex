@@ -129,12 +129,12 @@
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \ifCLASSINFOpdf
-  % \usepackage[pdftex]{graphicx}
+  \usepackage[pdftex]{graphicx}
   % declare the path(s) where your graphic files are
-  % \graphicspath{{../pdf/}{../jpeg/}}
+  \graphicspath{{.}}
   % and their extensions so you won't have to specify these with
   % every instance of \includegraphics
-  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+  \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
 \else
   % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
   % will default to the driver specified in the system graphics.cfg if no
@@ -508,7 +508,7 @@ ECC, Side channel attacks, Timing attack, Power consumtion attack, DPA, double a
 
 These channels will allow us to find some secret information beacause of two main points. We can have software or hardware leaks. Software leaks are due to branching condition in algorithms. Depending on the branch taken by the program, operations will not be the same. With these channels, we are able to detect what branch was taken. Second point is hardware leaks, each operation made by the processor consumes an amount of power which depends on the hamming weight of the value of manipulated data.\\
 
-This issue is at the heart of embedded security, a lot of research papers are published every month and attacks are more and more sophisticated. Last month, Daniel Genkin, Adi Shamir and Eran Tromer published a paper entitled "RSA Key Extraction via Low-Bandwidth Acoustic Cryptanalysis" where they showed that they can retreive a RSA key using a standard microphone to listen the noise emitted by a processor.\\
+This issue is at the heart of embedded security, a lot of research papers are published every month and attacks are more and more sophisticated. Last month, Daniel Genkin, Adi Shamir and Eran Tromer published a paper entitled "RSA Key Extraction via Low-Bandwidth Acoustic Cryptanalysis"\cite{genkin2013rsa} where they showed that they can retreive a RSA key using a standard microphone to listen the noise emitted by a processor.\\
 
 In this article, we will present several side-channel attacks and apply them to elliptic curve cryptanalysis. Then, we will show how we can protect ourselves from these attacks.\\
 
@@ -769,6 +769,15 @@ Two methods are used to exact the key, the simple power analysis (SPA) and the d
         \subsubsection{SPA}
 
 With simple power analysis, we just need one curve corresponding to one measurement of the consumption. From this curve, we can guess the secret key because each operation does not have the same power consumption. For instance with elliptic curve, the point adding is more expensive than the point doubling. In the basic double-and-add algorithm, we can know at each step if the addition is computed, if it is the case then we know that $ d[i]==1 $. At the end we are able to know the entire private key. Besides, an attacker can recognize point doubling from point adding because point adding cannot occurs twice at the time, it is only possible for point doubling.\\
+
+
+\begin{figure}[h]
+   \includegraphics[scale=0.65]{spa.png}
+   \caption{\label{spa.png} SPA against double-and-add from an Ipod touch.}
+\end{figure}
+
+In figure \ref{spa.png}, we can see the consumption curve for a double-and-add using elliptic curve on a Ipod touch. On this curve, each peak corresponds to a add operation, as we have said before, this operation is more expensive than the point doubling. Point doubling is represented in the blue rectangle. Then in the red one, we can observe a round of the loop where there is both operations: point doubling and point adding. Then the red rectangle corresponds to a bit equals to 1 and the blue to a bit equals to 0. This is coherent with the fact that we cannot have twice add at the time. From this, we can deduce the key, which is in binary 111011011011101 ($=30429$). Please remark that we have to read the graph from right to left to obtain the key.\\
+
 
 To protect against SPA, we need that the algorithm always perform the same operations. Here is an implementation of the double-and-add not vulnerable to SPA.
 
