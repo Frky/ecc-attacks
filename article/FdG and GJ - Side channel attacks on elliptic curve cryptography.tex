@@ -75,7 +75,6 @@
 \usepackage{empheq}
 
 
-
 % Some very useful LaTeX packages include:
 % (uncomment the ones you want to load)
 
@@ -979,17 +978,68 @@ to be able to reverse several rounds of the double-and-add algorithm (to compute
 With this method, it is possible to deduce bit by bit the secret key $d$, even with a left-to-right double-and-add algorithm.
 
 \section{Implementation}
-We propose here an implementation of the attack described in \ref{attack-powa} using {\tt Pari/GP}\footnote{See {\tt fault-attack.gp}}.
+We propose here an implementation of the attack described in \ref{attack-powa} using {\tt Pari/GP}\footnote{See {\tt fault-attack.gp}}. The curve used is {\tt brainpoolP160r1} described in {\tt RFC5639}.
+
+\subsection{Simulating fault injection}
+To simulate fault injections, we add a parameter $k$ in the $double-and-add$ function, which indicates that we want to introduce au fault a iteration $k$. Then, at iteration $k$, the function will flip one random bit of
+the abscissa of $Q$. The relevant code is the following: 
+
+\begin{footnotesize}
+\begin{verbatim}
+if(i == k,
+    b = random(floor(log(n)/log(2)) + 1);
+    print("    ! Fault injection at iteration", k);
+    Q = [Mod(bitxor(lift(Q[1]), (1<<b)), n), Q[2]];
+);
+\end{verbatim}
+\end{footnotesize}
 
 \subsection{Retrieving $d$ at once}
+The first implementation only allowed to retrieve all the bits of $d$ at once, thus it was not a polynomial algorithm. The reason of this limitation is the problem described in \ref{difficulties}.
+At this point, there is no call to a {\tt poing-halving} algorithm, as $Q_x^{j} = P$.\\
+
 \subsubsection{Problem encountered}
+Except for the necessity of {\tt point-halving} already mentionned, two other complaications came out during the implementation. The first one was the necessity of reimplementing {\tt elladd}, in 
+order to be able to add two points that are not necessarily on the curve. Indeed, formulas given in Appendix \ref{adding-on-ec} have no reason to be limited to points on the curve. And as we are working with 
+fault injections, at some point we are dealing with points that are "close" to points that are on the curve. And unfortunately, the basic version of {\tt elladd} checks if the points given in parameter belong to the curve.
+To skip that, we implemented {\tt add\_point} that does not do the verification.\\ 
+
+The second problem that was encountered was the substraction operation. To do this, we had to implement a new function: {\tt neg\_point}, that takes a curve $E$ and a point $P$ as a parameter, and that returns a point that would be the
+opposite of $P$ if $P$ is on the curve. Once again, we need the function to be able to do that on points that are not on the curve. The implementation uses the classical opposite formula on ECC: given $P = (x, y)$,
+$$- P := (x, -y - a1*x - a3)$$
 
 \subsubsection{Results}
+The conclusion of this first implementation is that we are able to recover very small keys in a short time (within a few seconds for seven bits) with one fault injection at the first iteration.
+Nevertheless, the computing time grows very fast as we add bits to the key size (see \ref{perf-all}).\\
+Another interesting point is that we only have one candidate for $Q_x^{(j)}$ (as expected in \ref{rq}).
+
+\begin{footnotesize}
+\begin{verbatim}
+$ gp fault-attack.gp 
+[SECRET KEY] d = 107
+[REFERENCE] Computing M = [d]P
+[FAULT] Computing M' = ([d]P)' with fault injection
+    ! Fault injection at iteration 1 !
+[ATTACK] Retrieving d from M and M'
+    ! Find out Q for d[1:7] = 107 !
+\end{verbatim}
+\end{footnotesize}
 
 \subsubsection{Performance}
+\label{perf-all}
+As expected, the time for computing the attack is exponential in function of the length of the key $d$. Figure \ref{first-attack-perf} shows some results obtained for $d$ from $1$ to $255$.
+\begin{figure}
+    \centering
+    \includegraphics[width=250px]{img/first-attack-perf.png}
+    \caption{Timing measures of the attack "at once" in function of the size of the key $d$}
+    \label{first-attack-perf}
+\end{figure}   
+
 
 \subsection{Retrieving $d$ bit by bit}
+
 \subsubsection{Problem encountered}
+
 \subsubsection{Results}
 \subsubsection{Performance}
 
