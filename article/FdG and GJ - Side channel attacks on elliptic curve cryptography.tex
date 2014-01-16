@@ -742,7 +742,7 @@ $[k]P$.
 
 
 We will see in next sections what side-channel attacks can be performed on this naive version, 
-and the possible counter-measures that lead to a more robust implementation. Section \ref{non-invasive}
+and the possible counter-measures that lead to a more robust implementation. Section \ref{non-intrusive}
 deals with non-intrusive attacks, such as timing attacks and power analysis attacks. Section~\ref{fault}
 deals with fault attacks.
 
@@ -892,11 +892,12 @@ that leads to an easier DLP problem on $E'$ (in fact we need $E'$ to have a smal
 get information about $d$). This attack will need several tries to recover the exact value of $d$.
 
 \subsection{Fault injection during the double-and-add}
+\label{attack-powa}
 In this section, we will present an attack that allows the attacker to retrieve $d$ in polynomial time, by
 introducing faults during the double-and-add computation. We will base the explanation on the algorithm given
-in section \ref{sensible-point-algo} (Algorithm \ref{d-and-a-algo}).
-The demonstration of the correctness of this attack and its complexity are not detailed here, but can be found in 
-\cite{biehl2000differential}.\\
+in section \ref{sensible-point-algo} (Algorithm \ref{d-and-a-algo}). This attack is well described in \cite{biehl2000differential}.
+Nevertheless, they use a right-to-left double-and-add algorithm, whereas the one that is used here is a left-to-right algorithm (see Algorithm \ref{d-and-a-algo}).
+As explained in \ref{difficulties}, this leads to several new difficulties (as point halving).\\
 
 \subsubsection{Notations}
 We will use notations very similar to \cite{biehl2000differential}.
@@ -916,7 +917,12 @@ At this point, we will try to find the first $i^* \in \{i, ..., n-1\}$ such that
 If at the end of the attack, we have found no good candidate, it will mean that such a $i^*$ does not exists, and then $d[i:n-1] = 0$.
 To do this, we will iterate on all possible values of $j \in \{i, ..., n-1\}$ possible candidates for $i^*$, and on all possible $x \in \{0, 1\}^{n-1-j}$ 
 possible candidates for $d[j:n-1]$, $n - j - 1$ least significant bits of d.
-From each value of $j$ and $x$, we compute $Q_x^{(j)} = Q^{(n)} - [x.2^j]P$, candidate for $Q^{(i)}$. 
+From each value of $j$ and $x$, we compute $Q_x^{(j)} = Q^{(n)} - [x]P$, candidate for $Q^{(i)}$. \\
+
+\label{rq}
+{\bf Remark.} This formula will only work if $i = 0$, that means that we are trying to compute the whole key at once. This point is treated in \ref{difficulties}.\\
+
+
 From $Q^{(i)}$ will be generated all possible values $Q'^{(i)}$ by flipping exactly one bit. To check if the values of $j$ and $x$ are correct, 
 we will simulate the end of the computation from $Q'^{(i)}$ with the value of $x$ instead of $d[j:n-1]$ which is unknown. If the result of the computation
 is equal to $Q'$, that means that the value of $x$ and $j$ are good candidates.
@@ -925,11 +931,67 @@ Otherwise, we need to redo the attack ; but one can show that the probability of
 (\cite{biehl2000differential}).\\
 
 \subsubsection{Find out $d$}
-Once we have the $i$ least significant bits of $d$, we can perform the same attack on iteration $i' < i$, and use the $i$ bits of $d$ to reduce the possibilities
-for $x$. Repeating this, we can find all the bits of $d$.
+\label{difficulties}
+This section deals with the remark of section \ref{rq}.
+In \cite{biehl2000differential}, the attack is at this point almost finished. Indeed, with a right-to-left algorithm, the key-bits are used from the LSB to the HSB. This means that 
+once we have supposed a value for $x$ as a candidate for the $k$ HSB of $d$, we can reverse the end of the double-and-add computation by taking the final point 
+$Q$ and substracting $[2^{j}x]P$ (with $j = l - k$). This can be done without any knowledge about $d[j:n-1]$. Using this point, we can retrieve the key $d$ bit by bit, from $d[0]$ to 
+$d[n-1]$ (using the HSB that are known to limit the space value for $x$).\\
+
+Unfortunately, here, if we want to retrieve $d$ bit by bit (otherwise, the complexity of the attack is not polynomial), we will need to implement a point-halving algorithm. 
+Indeed, as the double-and-add algorithm considered here is a left-from-right one, we need to retrieve the key from $d[n-1]$ to $d[0]$ (as explained previously). But to do that, we need
+to be able to reverse several rounds of the double-and-add algorithm (to compute $Q_x^{(j)}$). And, in fact, without any knowledge on $d[0:j-1]$, we need to be able to perform point-halving
+(see Algorithm \ref{rev-d-and-a-algo}). Such algorithms are described in \cite{rodriguezelliptic}.
 %If the value of $x$ is correct (meaning that it corresponds to the 
 %$n - 1 - j$ least significant bits of $d$), then $
 
+\begin{algorithm}
+%    \SetLine % For v3.9
+    \SetAlgoLined % For previous releases [?]
+   
+    \SetKwComment{tcc}{/* }{ */}
+    \SetSideCommentLeft 
+    \SetNoFillComment
+
+    \KwData{Q = [d]P: resulting point, d: secret key, P: base point, k: number of iterations to reverse}
+    
+    \KwResult{R: intermediate point}
+    
+    R $\leftarrow$ Q\;
+    l $\leftarrow$ $log_2(d)$\;
+    \For{i from 0 downto k}{
+        \If{d[l - i] == 1}{
+            \tcc{Using point adding}
+            R $\leftarrow$ R - P\; 
+        }
+        \tcc{POINT HALVING}
+        R $\leftarrow$ Q/2\; 
+    }
+    \Return{R}
+
+    \bigskip
+
+    \caption{Basic Double-and-Add algorithm}
+    \label{rev-d-and-a-algo}
+
+\end{algorithm}
+
+With this method, it is possible to deduce bit by bit the secret key $d$, even with a left-to-right double-and-add algorithm.
+
+\section{Implementation}
+We propose here an implementation of the attack described in \ref{attack-powa} using {\tt Pari/GP}\footnote{See {\tt fault-attack.gp}}.
+
+\subsection{Retrieving $d$ at once}
+\subsubsection{Problem encountered}
+
+\subsubsection{Results}
+
+\subsubsection{Performance}
+
+\subsection{Retrieving $d$ bit by bit}
+\subsubsection{Problem encountered}
+\subsubsection{Results}
+\subsubsection{Performance}
 
 \section{Conclusion}
 The conclusion goes here.
