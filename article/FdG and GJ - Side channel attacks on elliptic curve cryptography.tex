@@ -920,7 +920,8 @@ possible candidates for $d[j:n-1]$, $n - j - 1$ least significant bits of d.
 From each value of $j$ and $x$, we compute $Q_x^{(j)} = Q^{(n)} - [x]P$, candidate for $Q^{(i)}$. \\
 
 \label{rq}
-{\bf Remark.} This formula will only work if $i = 0$, that means that we are trying to compute the whole key at once. This point is treated in \ref{difficulties}.\\
+{\bf Remark.} This formula will only work if $i = 0$, that means that we are trying to compute the whole key at once. In other cases, it is more complicated
+to find the first candidate for $Q^{(i)}$. This point is treated in \ref{difficulties}.\\
 
 
 From $Q^{(i)}$ will be generated all possible values $Q'^{(i)}$ by flipping exactly one bit. To check if the values of $j$ and $x$ are correct, 
@@ -976,19 +977,29 @@ to be able to reverse several rounds of the double-and-add algorithm (to compute
 
 \end{algorithm}
 
-With this method, it is possible to deduce bit by bit the secret key $d$, even with a left-to-right double-and-add algorithm.
+With this method, it is possible to deduce bit by bit the secret key $d$, even with a left-to-right double-and-add algorithm.\\
 
 \subsubsection{Point halving}
-\cite{rodriguezelliptic} describe a way to find out $P$ given $E$ and $[2]P$. We present here our own method.
+\label{point-halving-sec}
+\cite{rodriguezelliptic} describe a way to find out $P$ given $E$ and $[2]P$. We recall the main idea for a curve of the form $E: y^2 = x^3 + a_4x + a_6$ (which is the case of the curve we have chosen in \ref{implem}).
 The goal is to reverse the function $elladd(E, P, P)$. From the formulas given in Appendix \ref{adding-on-ec}, if $P_1 = P_2 = P$, we have:
 
-$$ \lambda = \frac{3 x_1^2 + 2 a_2 x_1 + a_4 - a_1 y_1}{2 y_1 - a_1 x_1 - a_3} $$
-$$ x_{[2]P} = \lambda^2 + a_1 \lambda - a_2 - 2 x_P $$
-$$ y_{[2]P} = -y_P - (x_{[2]P} - x_P) \lambda - a_1 x_{[2]P} - a_3 $$
+\begin{empheq}[left=\empheqlbrace]{align*}
+    \lambda &= \frac{3 x_P^2 + 2 a_2 x_P + a_4 - a_1 y_P}{2 y_P - a_1 x_P - a_3} \\
+    x_{[2]P} &= \lambda^2 + a_1 \lambda - a_2 - 2 x_P \\
+    y_{[2]P} &= -y_P - (x_{[2]P} - x_P) \lambda - a_1 x_{[2]P} - a_3 
+\end{empheq}
 
-This leads to a linear system of 2 equations and 3 unknown ($x_{[2]P}$ and $y_{[2]P}$ and $\lambda$).
+where the 3 unknown are $x_P, y_P$ and $\lambda$. For the simplified form, this gives:
+
+\begin{empheq}[left=\empheqlbrace]{align*}
+    \lambda &= \frac{3 x_P^2 + a_4}{2 y_P} \\ 
+    x_{[2]P} &= \lambda^2 - 2 x_P  \\
+    y_{[2]P} &= - y_P - (x_{[2]P} - x_P) \lambda
+\end{empheq}
 
 \section{Implementation}
+\label{implem}
 We propose here an implementation of the attack described in \ref{attack-powa} using {\tt Pari/GP}\footnote{See {\tt fault-attack.gp}}. The curve used is {\tt brainpoolP160r1} described in {\tt RFC5639}.
 
 \subsection{Simulating fault injection}
@@ -1050,11 +1061,8 @@ To obtain the graph, we have computed the average time of the attacks on every p
 
 
 \subsection{Retrieving $d$ bit by bit}
-
-\subsubsection{Problem encountered}
-
-\subsubsection{Results}
-\subsubsection{Performance}
+As mentionned in section \ref{difficulties}, to be able to recover all bits of $d$ one by one, one need to be able to perform point-halving.
+Unfortunately, we ran out of time, and were not be able to implement this point-halving, and thus not able to perform the bit-by-bit recovery.
 
 \section{Conclusion}
 
