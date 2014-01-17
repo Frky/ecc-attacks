@@ -470,7 +470,7 @@
 
 \begin{abstract}
 %\boldmath
-In this article, we will explain what a side-channel attack is and how we can applied them to elliptic curves cryptography. We have decided to make an overview of different methods and show them more precisely when they have an important impact on elliptic curves cryptography. For each attack, we propose several methods to prevent these attacks or to minimize the impact on cryptanalysis.
+In this article, we will explain what a side-channel attack is and how it can be a threat to elliptic curves cryptography. We have decided to make an overview of different methods and only detail a few of them that have an important impact on elliptic curves cryptography. For each attack, we propose several methods to prevent these attacks or to minimize the impact on cryptanalysis.
 
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
@@ -508,7 +508,8 @@ ECC, Side channel attacks, Timing attack, Power consumption attack, DPA, double 
 
 These channels will allow us to find some secret information because of two main points. We can have software or hardware leaks. Software leaks are due to branching condition in algorithms. Depending on the branch taken by the program, operations will not be the same. With these channels, we are able to detect what branch was taken. Second point is hardware leaks, each operation made by the processor consumes an amount of power which depends on the hamming weight of the value of manipulated data.\\
 
-This issue is at the heart of embedded security, a lot of research papers are published every month and attacks are more and more sophisticated. Last month, Daniel Genkin, Adi Shamir and Eran Tromer published a paper entitled "RSA Key Extraction via Low-Bandwidth Acoustic Cryptanalysis"\cite{genkin2013rsa} where they showed that they can retrieve a RSA key using a standard microphone to listen the noise emitted by a processor.\\
+This issue is at the heart of embedded security, a lot of research papers are published every month and attacks are more and more sophisticated. Last month, Daniel Genkin, Adi Shamir and Eran Tromer published a paper entitled 
+{\it RSA Key Extraction via Low-Bandwidth Acoustic Cryptanalysis} (see \cite{genkin2013rsa}) where they showed that they can retrieve a RSA key using a standard microphone to listen the noise emitted by a processor.\\
 
 In this article, we will present several side-channel attacks and apply them to elliptic curve cryptanalysis. Then, we will show how we can protect ourselves from these attacks.\\
 
@@ -755,29 +756,25 @@ Non-intrusive attacks are attacks which do not destroy or alter the functioning 
    
     \subsection{Timing attacks}
 
-Timing attack was the first side-channel attack and one of the simplest. They consist in measuring the time dedicated to the computation of an algorithm. With this time, we can deduce how many times the program runs into a given loop.
+Timing attack was the first side-channel attack and one of the simplest. It consists in measuring the time dedicated to the computation of an algorithm. With this time, we can deduce how many times the program runs into a given loop.
 To protect against these attacks, implementations of an algorithm have to do the same number of loop, whatever the input of the loop condition is. \\
 
-Today, timing attack are no longer considered because power analysis attacks are more efficient and are as simple to set up. Almost no timing attacks against ECC have been published.
+Today, timing attacks are no longer considered because power analysis attacks are more efficient and as simple to set up. Almost no timing attacks against ECC have been published.
 
     \subsection{Power analysis attacks}
 
 The goal is to measure the power consumption of the device while it is running the program. To set up these attacks, we need an oscilloscope and a card reader.
-
-Two methods are used to exact the key, the simple power analysis (SPA) and the differential power analysis (DPA). We will go further these two methods.
+Two methods are used to extract the key, the simple power analysis (SPA) and the differential power analysis (DPA). We will go further these two methods.\\
 
         \subsubsection{SPA}
-
-With simple power analysis, we just need one curve corresponding to one measurement of the consumption. From this curve, we can guess the secret key because each operation does not have the same power consumption. For instance with elliptic curve, the point adding is more expensive than the point doubling. In the basic double-and-add algorithm, we can know at each step if the addition is computed, if it is the case then we know that $ d[i]==1 $. At the end we are able to know the entire private key. Besides, an attacker can recognize point doubling from point adding because point adding cannot occurs twice at the time, it is only possible for point doubling.\\
-
+With simple power analysis, we just need one curve corresponding to one measurement of the consumption. From this curve, we can guess the secret key because each operation does not have the same power consumption. For instance with elliptic curve, the point adding is more expensive than the point doubling. In the basic double-and-add algorithm, we can know at each step if the addition is computed, if it is the case then we know that $ d[i]==1 $. At the end we are able to know the entire private key. Besides, an attacker can recognize point doubling from point adding because point adding cannot occurs twice at the time, it is only possible for point doubling.
 
 \begin{figure}[h]
    \includegraphics[scale=0.65]{spa.png}
    \caption{\label{spa.png} SPA against double-and-add from an IPod touch.}
 \end{figure}
 
-In figure \ref{spa.png}, we can see the consumption curve for a double-and-add using elliptic curve on a IPod touch. On this curve, each peak corresponds to a add operation, as we have said before, this operation is more expensive than the point doubling. Point doubling is represented in the blue rectangle. Then in the red one, we can observe a round of the loop where there is both operations: point doubling and point adding. Then the red rectangle corresponds to a bit equals to 1 and the blue to a bit equals to 0. This is coherent with the fact that we cannot have twice add at the time. From this, we can deduce the key, which is in binary 111011011011101 ($=30429$). Please remark that if the double-and-add is performed from right to left instead of left to right, we have to read the graph from right to left to obtain the key.\\
-
+In figure \ref{spa.png}, we can see the consumption curve for a double-and-add using elliptic curve on a IPod touch. On this curve, each peak corresponds to a add operation. As we have said before, this operation is more expensive than the point doubling. Point doubling is represented in the blue rectangle. Then in the red one, we can observe a round of the loop where there is both operations: point doubling and point adding. Then the red rectangle corresponds to a bit equals to 1 and the blue to a bit equals to 0. This is coherent with the fact that we cannot have twice add at the time. From this, we can deduce the key, which is in binary 111011011011101 ($=30429$). Please remark that if the double-and-add is performed from right to left instead of left to right, we have to read the graph from right to left to obtain the key.
 
 \begin{algorithm}
 %    \SetLine % For v3.9
@@ -813,18 +810,17 @@ In figure \ref{spa.png}, we can see the consumption curve for a double-and-add u
     \label{resistent-daa}
 \end{algorithm}
 
-To protect against SPA, we need that the algorithm always perform the same operations. You can see in algorithm \ref{resistent-daa} an implementation of the double-and-add not vulnerable to SPA.
-
-
+To protect against SPA, that the algorithm has to always perform the same operations. We propose in algorithm \ref{resistent-daa} an implementation of the double-and-add robust against SPA.
 As you can see, the addition is always performed but the result is not used when the corresponding bit is not equal to 1. Then at each step, the amount of power consumed is the same.\\
 
         \subsubsection{DPA}
 
-SPA relies mainly on software leaks contrary to differential power analysis which exploit the hamming weight of manipulated data. DPA requires a lot of experiments, and acquisition of many power consumption curves. Usually we need many thousands curves. The goal is to collect a lot of curves corresponding to encryption with different known messages at each step (but the same key). Then the attacker makes some assumptions about few bits of the key and he uses these to compute intermediate values of the encryption algorithm. Then the attacker sort the set of curves into two sets, according to the power consumption at the point where he computed intermediate values. By making the subtraction between the mean of each set, the attacker can know if his supposition was true or not. \\
+SPA relies mainly on software leaks contrary to differential power analysis which exploit the hamming weight of manipulated data. DPA requires a lot of experiments, and acquisition of many power consumption curves. Usually we need several thousands of curves. The goal is to collect a lot of curves corresponding to encryption with different known messages at each step (but the same key). Then the attacker makes some assumptions about few bits of the key and he uses these to compute intermediate values of the encryption algorithm. Then the attacker sort the set of curves into two sets, according to the power consumption at the point where he computed intermediate values. By making the subtraction between the mean of each set, the attacker can know if his supposition was true or not. \\
 
-To succeed with DPA, we need that the key is the same at each acquisition, which is not the case in randomized algorithms such as ECDSA or HECDSA. Nevertheless some elliptic curve algorithm are vulnerable, such as the EC El Gamal.\\
+To succeed with DPA, we need the key to be the same at each acquisition, which is not the case in randomized algorithms such as ECDSA or HECDSA. Nevertheless, some elliptic curve algorithms are vulnerable, such as El Gamal.\\
 
-A countermeasure is to randomized intermediate values of the algorithm. For instance in elliptic curve, we can randomize the curve or the coordinates of the basis of calculation. Some other countermeasures are  in hardware, they try to change the power consumption model in order to it depends less on the hamming weight of data or it increases noise to prevent recognition from curves.
+A countermeasure is to randomize intermediate values of the algorithm. For instance in elliptic curve, we can randomize the curve or the coordinates of the basis of calculation. Some other countermeasures can be considered in hardware: 
+one can try to change the power consumption model in order to make it depend less on the hamming weight of data or increase noise to prevent recognition from curves.
         
 \section{Fault attacks}
 \label{fault}
