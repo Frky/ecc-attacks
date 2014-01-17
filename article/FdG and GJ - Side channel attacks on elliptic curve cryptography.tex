@@ -819,7 +819,10 @@ SPA relies mainly on software leaks contrary to differential power analysis whic
 
 To succeed with DPA, we need the key to be the same at each acquisition, which is not the case in randomized algorithms such as ECDSA or HECDSA. Nevertheless, some elliptic curve algorithms are vulnerable, such as El Gamal.\\
 
-A countermeasure is to randomize intermediate values of the algorithm. For instance in elliptic curve, we can randomize the curve or the coordinates of the basis of calculation. Some other countermeasures can be considered in hardware: 
+A countermeasure is to randomize intermediate values of the algorithm. For instance in elliptic curve, we can randomize the curve or the coordinates of the basis of calculation.
+It is also possible to consider other curves, where formulas for addition are unified. This means that the same formula is valid both for doubling and adding. This is well explained in chapter 29.1.2 of \cite{cohen2010handbook}.\\
+
+Some other countermeasures can be considered in hardware: 
 one can try to change the power consumption model in order to make it depend less on the hamming weight of data or increase noise to prevent recognition from curves.
         
 \section{Fault attacks}
