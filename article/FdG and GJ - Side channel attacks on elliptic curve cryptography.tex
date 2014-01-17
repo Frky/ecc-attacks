@@ -998,6 +998,16 @@ where the 3 unknown are $x_P, y_P$ and $\lambda$. For the simplified form, this 
     y_{[2]P} &= - y_P - (x_{[2]P} - x_P) \lambda
 \end{empheq}
 
+This leads to:
+
+\begin{empheq}[left=\empheqlbrace]{align*}
+    4 y_P^{2} x_{[2]P} = 9 x_P^{4} + 6 x_P^{2} a_{4} - 2 x_P + a_4^{2} \\
+    y_P (2 y_{[2]P} + 1) = -(x_{[2]P} - x_P) (3 x_P^{2} + a_4) 
+\end{empheq}
+
+Now we can inject $y_P$ from the second equation to the first one. Then we obtain a univariate polynomial of degree 6 in $x_P$. Once you have $x_P$, you can deduce $y_P$ with the second equation. ($x_P$, $y_P$) is the point halving of R.
+
+
 \section{Implementation}
 \label{implem}
 We propose here an implementation of the attack described in \ref{attack-powa} using {\tt Pari/GP}\footnote{See {\tt fault-attack.gp}}. The curve used is {\tt brainpoolP160r1} described in {\tt RFC5639}.
