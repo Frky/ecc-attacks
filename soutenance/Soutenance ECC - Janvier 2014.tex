@@ -312,9 +312,39 @@
 \begin{frame}
     \frametitle{Differential power analysis}
     \begin{itemize}
+	\item \textcolor{black} {A statistical method}
         \item \textcolor{black} {Rely on small variations of power $\alpha_{i}. h_{data_{i}}$}
 	\item \textcolor{black} {Require a lot of experiments, acquisition of many curves}
+	\item \textcolor{black} {Need to be more precise on the measurement}
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Differential power analysis}
+    \begin{itemize}
+        \item \textcolor{black} {Choose a selection fonction $F(m, k_{[i..i+l]})$}
+	\item \textcolor{black} {Acquire several curves with variety of plaintexts (but the same key)}
+	\item \textcolor{black} {Make an hypothesis about the $[i..i+l]$ bits of the key}
+	\item \textcolor{black} {Sort all curves according to this hypothesis in 2 sets}
+	\item \textcolor{black} {Compute the difference of the means of both sets}
+	\item \textcolor{black} {If you have a peak, hypothesis is true}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Differential power analysis}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.5]{img/dpa.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Differential power analysis}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.5]{img/dpa2.png}
+    \end{figure}
 \end{frame}
 
 \section{Perturbation attacks}
