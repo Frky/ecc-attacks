@@ -196,10 +196,10 @@
 \end{frame}
 
 \section{Perturbation attacks}
-    \subsection{Model}
+    \subsection{Fault Model}
 
     \begin{frame}
-        \frametitle{Fault model}
+        \frametitle{Fault Model}
             Generally, in smart cards, we consider that we can :
             \begin{itemize}
                 \item \color{black}{Inject {\tt 0x00}}
@@ -209,7 +209,7 @@
     \end{frame}
 
     \begin{frame}
-        \frametitle{How ?}
+        \frametitle{Fault Model - How ?}
             \begin{itemize}
                 \item \color{black}{Modifiying {\tt VCC}}
             \end{itemize}
@@ -222,7 +222,7 @@
     \end{frame}
 
     \begin{frame}
-        \frametitle{How ?}
+        \frametitle{Fault Model - How ?}
             \begin{itemize}
                 \item \color{black}{Modifiying {\tt VCC}}
                 \item \color{black}{With a laser}
@@ -236,7 +236,7 @@
     \end{frame}
 
     \begin{frame}
-        \frametitle{In the case of the double-and-add}
+        \frametitle{Fault Model - In the case of the double-and-add}
 
             \begin{itemize}
                 \item \color{black}{Modification of a register}
@@ -247,13 +247,9 @@
     \end{frame}
 
     \subsection{Naive attack}
-    \begin{frame}
-        \frametitle{First attack: malicious input}
-        {\bf Idea:} Give to {\tt double-and-add} a point $P'$ that is not on the curve
-    \end{frame}
 
     \begin{frame}
-        \frametitle{Reminder: add formula}
+        \frametitle{Naive attack - Reminder: add formula}
             \label{adding-on-ec}
             $K$ a finite field, $(a_1, a_2, a_3, a_4, a_6) \in K$ \\
             $$E(K) = \{(x, y) \in K, y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6\} \cup \{\mathcal{O}\}$$
@@ -268,16 +264,24 @@
     \end{frame}
     
     \begin{frame}
-        \frametitle{Remarks}
+        \frametitle{Naive attack - Remarks}
             \begin{itemize} 
                 \item \color{black}{Same with $P_1' \notin E(K) \Rightarrow$ result not in $E(K)$}
-                \item \color{black}{Does not depend on $a_6 \Rightarrow$ possible to move to $E'(K)$}
+                \item \color{black}{Does not depend on $a_6 \Rightarrow$ same addition on $E'(K)$}
             \end{itemize}
 
     \end{frame}
     
     \begin{frame}
-        \frametitle{}
+        \frametitle{Naive attack: malicious input $P'$}
+        {\bf Idea:} Move the DLP problem (of finding $d$ from $P$ and $[d]P$) from $E$ to $E'$
+        \begin{enumerate}
+            \item \color{black}{Find $E'$ of equation $y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a'_6$ of cardinality with a small factor}
+            \item \color{black}{Find $P' \in E'(K)$ of small order}
+            \item \color{black}{Give to {\tt double-and-add} $P'$ and get back $Q'$}
+            \item \color{black}{Solve DLP in $<P'>$}
+        \end{enumerate}
+        
     \end{frame}
     
     \begin{frame}
@@ -297,6 +301,13 @@
     \end{frame}
 
     \subsection{During the computation}
+
+    \begin{frame}
+        \frametitle{}
+        \begin{center}
+            {\Huge\bf\tt DEMO}
+        \end{center}
+    \end{frame}
 
 \begin{frame}
     \frametitle{Conclusion}
