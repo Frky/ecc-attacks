@@ -19,6 +19,7 @@
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{empheq}
 
 \usepackage[absolute,showboxes,overlay]{textpos}
 
@@ -133,7 +134,106 @@
 	\subsubsection{SPA: Differential power analysis}
 
 \section{Perturbation attacks}
+    \subsection{Model}
+
+    \begin{frame}
+        \frametitle{Fault model}
+            Generally, in smart cards, we consider that we can :
+            \begin{itemize}
+                \item \color{black}{Inject {\tt 0x00}}
+                \item \color{black}{Inject {\tt 0xFF}}
+                \item \color{black}{Inject {\tt 0x??}}
+            \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{How ?}
+            \begin{itemize}
+                \item \color{black}{Modifiying {\tt VCC}}
+            \end{itemize}
+            
+            \begin{figure}
+                \centering
+                \includegraphics[width=180px]{img/power_disturbation}
+            \end{figure}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{How ?}
+            \begin{itemize}
+                \item \color{black}{Modifiying {\tt VCC}}
+                \item \color{black}{With a laser}
+            \end{itemize}
+            
+            \begin{figure}
+                \centering
+                \includegraphics[width=130px]{img/laser}
+            \end{figure}
+
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{In the case of the double-and-add}
+
+            \begin{itemize}
+                \item \color{black}{Modification of a register}
+                \item \color{black}{$\Rightarrow$ impact on one of the coordinates}
+                \item \color{black}{Bit flip}
+            \end{itemize}
+
+    \end{frame}
+
     \subsection{Naive attack}
+    \begin{frame}
+        \frametitle{First attack: malicious input}
+        {\bf Idea:} Give to {\tt double-and-add} a point $P'$ that is not on the curve
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Reminder: add formula}
+            \label{adding-on-ec}
+            $K$ a finite field, $(a_1, a_2, a_3, a_4, a_6) \in K$ \\
+            $$E(K) = \{(x, y) \in K, y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6\} \cup \{\mathcal{O}\}$$
+                    \begin{empheq}[left=\empheqlbrace]{align*}
+                        x_3 &= \lambda^2 + a_1\lambda - a_2 - x_1 - x_2 \\ y_3 &= - y_1 - (x_3 - x_1)\lambda - a_1x_3 - a_3
+                    \end{empheq}
+                    with
+                    \begin{empheq}[left=\lambda\empheqlbrace]{align*}
+                        &\frac{3x_1^2 + 2a_2x_1 + a_4 - a_1y_1}{2y_1 + a_1x_1 + a_3}~if~x_1 = x_2~and~y_1 = y_2\\
+                        &\frac{3x_1^2 + 2a_2x_1 + a_4 - a_1y_1}{2y_1 + a_1x_1 + a_3}~otherwise
+                    \end{empheq}
+    \end{frame}
+    
+    \begin{frame}
+        \frametitle{Remarks}
+            \begin{itemize} 
+                \item \color{black}{Same with $P_1' \notin E(K) \Rightarrow$ result not in $E(K)$}
+                \item \color{black}{Does not depend on $a_6 \Rightarrow$ possible to move to $E'(K)$}
+            \end{itemize}
+
+    \end{frame}
+    
+    \begin{frame}
+        \frametitle{}
+    \end{frame}
+    
+    \begin{frame}
+        \frametitle{}
+    \end{frame}
+    
+    \begin{frame}
+        \frametitle{}
+    \end{frame}
+    
+    \begin{frame}
+        \frametitle{}
+    \end{frame}
+    
+    \begin{frame}
+        \frametitle{}
+    \end{frame}
+
     \subsection{During the computation}
 
 \begin{frame}
