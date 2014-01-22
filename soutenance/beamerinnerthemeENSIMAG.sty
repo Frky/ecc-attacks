@@ -1,0 +1,62 @@
+\DeclareOptionBeamer{shadow}[true]{\def\beamer@themeENSIMAG@shadow{#1}}
+\ExecuteOptionsBeamer{shadow=false}
+\ProcessOptionsBeamer
+
+\mode<presentation>
+
+
+
+\defbeamertemplate*{title page}{ENSIMAG theme}[1][]
+{
+  \vbox{}
+  \vfill
+  \begin{centering}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{title}
+      \usebeamerfont{title}\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.45em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%
+    \end{beamercolorbox}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center,#1]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{date}
+      \usebeamerfont{date}\insertdate
+    \end{beamercolorbox}\vskip0.5em
+    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  \end{centering}
+  \vfill
+}
+
+
+\defbeamertemplate*{part page}{ENSIMAG theme}[1][]
+{
+  \begin{centering}
+    {\usebeamerfont{part name}\usebeamercolor[fg]{part name}\partname~\insertromanpartnumber}
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center,#1]{part title}
+      \usebeamerfont{part title}\fleche~\insertpart\par
+    \end{beamercolorbox}
+  \end{centering}
+}
+
+
+\defbeamertemplate{itemize item}{fleche}{\fleche}
+\defbeamertemplate{itemize subitem}{fleche}{\fleche}
+\defbeamertemplate{itemize subsubitem}{fleche}{\fleche}
+
+
+\setbeamertemplate{blocks}[rounded][shadow=\beamer@themeENSIMAG@shadow]
+\setbeamertemplate{items}[fleche]
+\setbeamertemplate{sections/subsections in toc}[ball]
+\setbeamertemplate{title page}[ENSIMAG theme][colsep=-4bp,rounded=true,shadow=\beamer@themeENSIMAG@shadow]
+\setbeamertemplate{part page}[ENSIMAG theme][colsep=-4bp,rounded=true,shadow=\beamer@themeENSIMAG@shadow]
+
+
+\mode<all>

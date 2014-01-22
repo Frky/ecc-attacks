@@ -1,0 +1,173 @@
+\documentclass{beamer}
+%\documentclass[handout]{beamer}
+
+\usetheme{ENSIMAG}
+
+\definecolor{redtrefle}{rgb}{0.5, 0, 0}
+\definecolor{redmoka}{rgb}{0.25, 0.5, 0}
+\definecolor{redminuit}{rgb}{0.5, 0, 0.5}
+\definecolor{lightgray}{rgb}{0.6, 0.6, 0.6}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{orange}{rgb}{1,0.45,0}
+\definecolor{dkblue}{rgb}{0.098,0.098,0.44}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{color}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\usepackage[absolute,showboxes,overlay]{textpos}
+
+%\TPshowboxestrue
+\TPshowboxesfalse
+\textblockorigin{10mm}{10mm} % origine des positions
+
+
+% command to highlight text in orange
+\newcommand{\alertor}[1]{\textcolor{orange}{#1}}
+
+\usepackage{tikz}
+\tikzset{visib/.style={rectangle, color=black, fill=gray!10, draw, text=black, text opacity=1, text width=#1,align=flush center}}
+\tikzset{rvisib/.style={text=black,text opacity=1, text width=#1,align=flush right}}
+\tikzset{invisib/.style={rectangle,color=gray,fill=gray!10,text=black,draw,text opacity=0.4, text width=#1,align=flush center}}
+\newenvironment{myfancyblock}%
+{\begin{center}\begin{tikzpicture}}%
+{\end{tikzpicture}\end{center}}%
+\newcommand{\opaqueblock}[4]{
+    \node[#2=#3] (X) {#4};
+}
+
+% Settings pour l'insertion de code %
+\lstset{
+  language=C,
+  aboveskip=3mm,
+  belowskip=3mm,
+  xleftmargin=9mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\tiny\ttfamily},
+  numbers=left,
+  numberstyle=\tiny\ttfamily\color{mauve},
+  keywordstyle=\color{orange},
+  commentstyle=\color{dkblue},
+  stringstyle=\color{mauve},
+  breakatwhitespace=true
+  tabsize=4
+}
+
+\lstset{escapechar=\§}
+
+\title[ECC Side channel attacks]{Side Channel attacks on ECC}
+
+\subtitle{Review of possible attacks}
+
+\author{Franck De Goër\\Guillaume Jeanne}
+
+\institute{SCCI - Ensimag}
+
+\date{January, 2014}
+
+\AtBeginSection[]
+{
+    \begin{frame}<beamer>
+        \frametitle{Overview}
+        \tableofcontents[currentsection]
+    \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}[t]
+    \frametitle{Introduction}
+    \vspace{1cm}
+    \begin{description}
+        \item[{\bf Subjet}] High performance computation
+        \item[{\bf Goal}] Perform an attack over DES using HPC methods\\
+	This attack is generic, does not exploit a weakness in DES.
+	It can be applied over symmetric ciphers, hash functions...
+    \end{description}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Overview}
+    \tableofcontents
+\end{frame}
+
+
+\section{The double-and-add algorithm}
+    \subsection{Universality}
+    \subsection{Importance}
+
+\section{Non-invasive attacks}
+
+\section{Perturbation attacks}
+    \subsection{Naive attack}
+    \subsection{During the computation}
+
+\begin{frame}
+    \frametitle{Conclusion}
+
+    \begin{itemize}
+        \item \textcolor{black}{Low size keys are weak, regardless of the cipher}
+        \item \textcolor{black}{Rainbow table attacks can be efficient}
+        \item \textcolor{black}{Generalizable to hash functions, symmetric ciphers and very scalable.}
+	\item \textcolor{black}{But considering global power calculation, current ciphers are not vulnerable to this attack.}
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{}
+    \begin{center}
+        {\Huge\bf\tt Thank you for your attention.}
+    \end{center}
+\end{frame}
+
+
+%\section{Début 2}
+%
+%\subsection{Tout début}
+%
+%\begin{frame} \frametitle{Compilation de slides}
+%\begin{myfancyblock}
+%% First block
+%\opaqueblock{1}{\textwidth}{All you have to do to initialize a GLSurfaceView is call setRenderer().
+%However, if desired, you can modify the default behavior of GLSurfaceView
+%by calling \alertor{one or more} of these methods before \alertor{setRenderer}:
+%\begin{itemize}
+%\item setDebug()
+%\item setChooser()
+%\item setWrapper()
+%\end{itemize}
+%\begin{flushright}
+%(Android    2.2 API Reference)
+%\end{flushright}
+%}
+%\invblock{2-}{\textwidth}
+%
+%% Second block
+%\opaqueblock{2}{0.6\textwidth}{You can optionally modify the behaviour of GLSurfaceView by calling one or more debugging methods \alertor{setDebug()}, and \alertor{setWrapper()}. These methods can be called \alertor{before and or after setRender}}
+%\invblock{3-}{0.6\textwidth}
+%
+%% Third block
+%\opaqueblock{3}{0.7\textwidth}{Once the render is set, you can control whether the render draws continuously or on demand by calling \alertor{setRenderMode()}}
+%
+%\end{myfancyblock}
+%\end{frame}
+
+\end{document}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

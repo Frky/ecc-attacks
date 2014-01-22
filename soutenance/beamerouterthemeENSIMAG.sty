@@ -1,0 +1,147 @@
+
+\mode<presentation>
+
+% Le fond d'écran
+%
+\pgfdeclareimage[height=\paperheight,width=\paperwidth]{fond_titre}{fond_titre}
+\pgfdeclareimage[height=\paperheight,width=\paperwidth]{fond_page}{fond_page}
+\pgfdeclareimage[height=\paperheight,width=\paperwidth]{fond_page}{fond_page}
+
+\setbeamertemplate{background}{
+  \ifnum\c@framenumber=1%
+    \pgfuseimage{fond_titre}%
+  \else%
+    \pgfuseimage{fond_page}%
+  \fi%
+}
+
+
+% La "flèche" (à queue pointue, dans un cercle)
+%
+\RequirePackage{tikz}
+\newlength\fsz  % fleche size
+\newcommand{\fleche}{%
+%\setlength{\fsz}{\fontcharht\font `X
+\settoheight{\fsz}{X}
+\begin{tikzpicture}
+\draw[line width=0.05\fsz] (0.5\fsz,0.5\fsz) circle (0.45\fsz);
+\fill	(0.47\fsz,0.66\fsz) -- (0.48\fsz,0.55\fsz) -- (0.14\fsz,0.52\fsz) --
+	(0.14\fsz,0.48\fsz) -- (0.48\fsz,0.45\fsz) -- (0.47\fsz,0.33\fsz) --
+        (0.85\fsz,0.50\fsz) -- cycle ;
+\end{tikzpicture}}
+
+
+
+\setbeamercolor{section in head/foot}{parent=palette quaternary}
+\setbeamercolor{subsection in head/foot}{parent=palette primary}
+
+\setbeamercolor{author in head/foot}{parent=section in head/foot}
+\setbeamercolor{title in head/foot}{parent=subsection in head/foot}
+
+
+\usesectionheadtemplate
+  {\hfill\insertsectionhead}
+  {\hfill\color{fg!50!bg}\insertsectionhead}
+
+\defbeamertemplate*{headline}{ENSIMAG theme}
+{%
+  \leavevmode%
+  \vskip0.09\paperheight% % Je me décale de la hauteur du bandeau École...
+}
+
+
+\defbeamertemplate*{footline}{ENSIMAG theme}
+{%
+  \leavevmode%
+  \hbox{%\begin{beamercolorbox}[wd=.33\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fill]{author in head/foot}%
+%     \usebeamerfont{author in head/foot}\insertshortauthor
+%   \end{beamercolorbox}%
+%   \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fil,rightskip=.3cm plus1fil]{title in head/foot}%
+%     \usebeamerfont{title in head/foot}\insertshorttitle
+%   \end{beamercolorbox}}%
+\begin{beamercolorbox}[ht=2.5ex,dp=1.125ex]%leftskip=.3cm plus1fil,rightskip=.3cm plus1fil]
+{title in head/foot}
+%\begin{center}
+\begin{flushright}
+\usebeamercolor[fg]{page number in footline}
+    \insertpagenumber~~~~%
+    %\,/\,\insertpresentationendpage
+   
+\end{flushright}
+%\end{center}
+\end{beamercolorbox}
+
+}
+  \vskip0pt%
+}
+
+
+\setbeamerfont{page number in sidebar}{size=\scriptsize}
+
+\setbeamersize{sidebar width right=0pt}
+\setbeamersize{sidebar width left=0pt}
+\defbeamertemplate*{sidebar left}{ENSIMAG theme}
+{%
+  \ifnum\c@framenumber>1%
+  { \vskip0.055\paperheight%
+    \hskip0.05\paperwidth%
+    \usebeamercolor[fg]{page number in sidebar}%
+    \usebeamerfont{page number in sidebar}%
+    \insertpagenumber\,/\,\insertpresentationendpage%
+  }\fi%
+  \vfill%
+  \hskip0.1cm\insertlogo%
+  \vskip2pt%
+  \hskip0.1cm\usebeamertemplate***{navigation symbols}%
+  \vskip2pt%
+}
+\defbeamertemplate*{sidebar right}{ENSIMAG theme}{}
+
+
+\setbeamercolor{frametitle}{parent=subsection in head/foot}
+\setbeamercolor{frametitle center}{parent=section in head/foot}
+
+\defbeamertemplate*{frametitle}{ENSIMAG theme}
+{%
+  \nointerlineskip%
+  \vskip-2pt%
+  \hbox{\leavevmode
+    \advance\beamer@leftmargin by -12bp%
+    \advance\beamer@rightmargin by -12bp%
+    \beamer@tempdim=\textwidth%
+    \advance\beamer@tempdim by \beamer@leftmargin%
+    \advance\beamer@tempdim by \beamer@rightmargin%
+    \hskip-\Gm@lmargin\hbox{%
+      \setbox\beamer@tempbox=\hbox{\begin{minipage}[b]{\paperwidth}%
+          \vbox{}\vskip-.75ex%
+%          \leftskip0.3cm%
+          \leftskip0.19\paperwidth % Largeur du dessin de la charte à gauche
+          \rightskip0.3cm plus1fil\leavevmode
+          ~~~~\insertframetitle%
+          \ifx\insertframesubtitle\@empty%
+            \strut\par%
+          \else
+            \par{\usebeamerfont*{framesubtitle}{\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}\strut\par}%
+          \fi%
+          \nointerlineskip
+          \vbox{}%
+          \end{minipage}}%
+      \beamer@tempdim=\ht\beamer@tempbox%
+      \advance\beamer@tempdim by 2pt%
+      \begin{pgfpicture}{0pt}{0pt}{\paperwidth}{\beamer@tempdim}
+        \usebeamercolor{frametitle right}
+        \pgfpathrectangle{\pgfpointorigin}{\pgfpoint{\paperwidth}{\beamer@tempdim}}
+        \pgfusepath{clip}
+        \pgftext[left,base]{} % C'est manifestement ça qui place le texte
+      \end{pgfpicture}
+      \hskip-\paperwidth%
+      \box\beamer@tempbox%
+    }%
+    \hskip-\Gm@rmargin%
+  }%
+  \nointerlineskip
+  \vskip-0.2pt
+}
+
+
+\mode<all>
