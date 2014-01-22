@@ -19,7 +19,7 @@
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage{listings}
-\usepackage{algorithm2e}
+%\usepackage{algorithm2e}
 \usepackage{empheq}
 
 \usepackage[absolute,showboxes,overlay]{textpos}
@@ -176,7 +176,7 @@
     \begin{figure}
         \centering
         \includegraphics[scale=0.6]{img/spa.png}
-        \caption{SPA against double-and-add from an IPod touch.}
+        \caption{SPA against double-and-add from an IPod touch}
     \end{figure}
 \end{frame}
 
@@ -287,23 +287,76 @@
         
     \end{frame}
     
+    \subsection{During the computation}
     \begin{frame}
-        \frametitle{}
+        \frametitle{During the computation}
+        {\bf Idea: } Inject fault during the $i^{th}$ round of the {\bf double-and-add} algorithm \\
+
+        $\Rightarrow$ From $Q = [d]P$ and $Q'$ (result of the computation with fault), we deduce the last bits of $d$.
+
     \end{frame}
     
     \begin{frame}
-        \frametitle{}
+        \frametitle{During the computation}
+        Notations:
+        \begin{itemize}
+            \item $Q^{(i)}$: value of $Q$ at the beginning of the $i^{th}$ round of the computation
+            \item $Q'^{(i)}$: value of $Q$ at the beginning of the $i^{th}$ round of the computation, after the fault injection
+            \item $d[i:j]$ design the $i$ to $j$ bits of $d$ written in Big-Endian
+        \end{itemize}
+
     \end{frame}
     
     \begin{frame}
-        \frametitle{}
+        \frametitle{During the computation}
+       
+        {\bf Goals:}
+        \begin{itemize}
+            \item \color{black} { Retrieve $Q'^{(i)}$}
+            \item \color{black} { Retrieve $d[i:]$ }
+        \end{itemize}
+
+        {\bf To do that:}
+        \begin{itemize}
+            \item \color{black} { Iteration on  $i <= j <= n-1$: first bit of $d[i:]$ to be $1$}
+            \item \color{black} { Iteration on all possible values of $d[j:]$ denoted $x$}
+            \item \color{black} { Iteration on all possible values of $Q'^{(i)}$}
+        \end{itemize}
     \end{frame}
     
     \begin{frame}
-        \frametitle{}
+        \frametitle{During the computation}
+        Algorithm template:
+
     \end{frame}
 
-    \subsection{During the computation}
+    \begin{frame}
+        \frametitle{During the computation}
+        Find possible values of $Q'^{(i)}$ ? $\Rightarrow$ reverse the last $n-1-i$ rounds of {\tt double-and-add} algorithm
+        \begin{center}
+        INSERT ALGO %TODO
+        \end{center}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{During the computation}
+        Then, from $Q'_x^{(i)}$, we:
+        \begin{itemize}
+            \item \color{black} { comptue all possible 1-bit mutations of $Q'_x^(i)$ denoted $R$ }
+            \item \color{black} { compute $Q" = [x]R$}
+            \item \color{black} { compare $Q"$ with $Q'$}
+        \end{itemize}
+    \end{frame}
+
+    %TODO algo of the attack
+
+    \begin{frame}
+        \frametitle{During the computation}
+        Complexity: {\bf polynomial}\\
+
+        (if we retrieve $d$ bit by bit from the LSB)
+
+    \end{frame}
 
     \begin{frame}
         \frametitle{}
