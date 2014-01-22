@@ -482,8 +482,43 @@
     \begin{frame}
         \frametitle{During the computation}
         Find possible values of $Q'^{(i)}$ ? $\Rightarrow$ reverse the last $n-1-i$ rounds of {\tt double-and-add} algorithm
+    \end{frame}
+
+
+    \begin{frame}
+        \frametitle{During the computation}
         \begin{center}
-        INSERT ALGO %TODO
+            \begin{algorithm}[H]
+                \footnotesize
+            %    \SetLine % For v3.9
+                \SetAlgoLined % For previous releases [?]
+               
+                \SetKwComment{tcc}{/* }{ */}
+                \SetSideCommentLeft 
+                \SetNoFillComment
+            
+                \KwData{Q = [d]P: resulting point, d: secret key, P: base point, k: number of iterations to reverse}
+                
+                \KwResult{R: intermediate point}
+                
+                R $\leftarrow$ Q\;
+                l $\leftarrow$ $log_2(d)$\;
+                \For{i from 0 downto k}{
+                    \If{d[l - i] == 1}{
+                        \tcc{Using point adding}
+                        R $\leftarrow$ R - P\; 
+                    }
+                    \tcc{POINT HALVING}
+                    R $\leftarrow$ Q/2\; 
+                }
+                \Return{R}
+            
+                \bigskip
+            
+                \caption{Basic Double-and-Add algorithm}
+                \label{rev-d-and-a-algo}
+            
+            \end{algorithm}
         \end{center}
     \end{frame}
 
@@ -498,6 +533,24 @@
     \end{frame}
 
     %TODO algo of the attack
+    \begin{frame}
+        \frametitle{During the computation}
+        
+        \begin{algorithm}[H]
+            \small
+
+            \For{j in i..n-1}{
+                \For{x in $2^j$ .. $2^{n - 1}$}{
+                    \For{$R$ mutation of $Q'_x^{(i)}$}{
+                        [...] \;
+                    }
+                }
+            }
+
+        \end{algorithm}
+
+    \end{frame}
+
 
     \begin{frame}
         \frametitle{During the computation}
