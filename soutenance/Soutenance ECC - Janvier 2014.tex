@@ -19,7 +19,7 @@
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage{listings}
-%\usepackage{algorithm2e}
+\usepackage[french, lined]{algorithm2e}
 \usepackage{empheq}
 
 \usepackage[absolute,showboxes,overlay]{textpos}
@@ -116,7 +116,97 @@
 
 \section{The double-and-add algorithm}
     \subsection{Universality}
+
+\begin{frame}
+    \frametitle{The double-and-add algorithm}
+    \begin{itemize}
+        \item \textcolor{black} {Used to compute scalar multiplication}
+        \item \textcolor{black} {Responsible of the calculation acceleration}
+	\item \textcolor{black} {$\implies$ We consider DLP as a hard problem}
+	\item \textcolor{black} {Used in all cryptographic algorithms based on DLP}
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Double and add algorithm}
+\begin{algorithm}[H]
+    \footnotesize
+%    \SetLine % For v3.9
+    \SetAlgoLined % For previous releases [?]
+   
+    \SetKwComment{tcc}{/* }{ */}
+    \SetSideCommentLeft 
+    \SetNoFillComment
+
+    \KwData{P: base point ; d: scalar}
+    
+    \KwResult{Q = [d]P resulting point}
+    
+    Q $\leftarrow$ 0\;
+    l $\leftarrow$ $log_2(d)$\;
+    \For{i from l downto 0}{
+        \tcc{Using point doubling}
+        Q $\leftarrow$ [2]Q\; 
+        \If{d[i] == 1}{
+            \tcc{Using point adding}
+            Q $\leftarrow$ Q + P\; 
+        }
+    }
+    \Return{Q}
+
+    \bigskip
+
+    \caption{Basic Double-and-Add algorithm}
+    \label{d-and-a-algo}
+
+\end{algorithm}
+
+\end{frame}
+
     \subsection{Importance}
+
+\begin{frame}
+    \frametitle{Double and add in ECIES}
+\begin{algorithm}[H]
+    \footnotesize
+    \SetAlgoLined
+
+    \SetKwComment{tcc}{/* }{ */}
+    \SetSideCommentLeft 
+    \SetNoFillComment
+
+    \LinesNumbered
+
+    \KwData{(R, c, d): cipher-text, EC: elliptic curve, P: base point, n: order of P, k: private key, E: symmetric encryption scheme, MAC: message authentication code function, KDF: key derivation function}
+    \KwResult{m: message}
+    
+    (x, y) $\leftarrow$ [k]R\;
+    \If{x == 0 and y == 0}{
+        \Return{Failure}\;
+    }
+
+    \tcc{Key derivation}
+    $k_e||k_m$ $\leftarrow$ KDF(x)\;
+    
+    \If{d != MAC($k_m$, c)}{
+        \Return{Failure}\;
+    }
+
+    \tcc{Decryption of the symmetric cipher}
+    m = $E^{-1}$($k_e$, c)\;
+
+    \Return{m}
+
+    \caption{Decipher c in ECIES}
+    \label{ecies-decrypt}
+
+\end{algorithm}
+
+\end{frame}
+
+
 
 \section{Non-invasive attacks}
 
@@ -159,7 +249,6 @@
     $ p_{i} \approx 10^{2}.\alpha_{i}. h_{data_{i}}$\\
 \end{frame}
 
-        \subsubsection{SPA: Simple power analysis}
 
 \begin{frame}
     \frametitle{Simple power analysis}
@@ -182,13 +271,43 @@
 
 \begin{frame}
     \frametitle{Protection against SPA}
-    \begin{itemize}
-        \item \textcolor{black} {INSERER ALGO}
-    \end{itemize}
+\begin{algorithm}[H]
+    \footnotesize
+%    \SetLine % For v3.9
+    \SetAlgoLined % For previous releases [?]
+   
+    \SetKwComment{tcc}{/* }{ */}
+    \SetSideCommentLeft 
+    \SetNoFillComment
+
+    \KwData{P: base point ; d: scalar}
+    
+    \KwResult{Q = [d]P resulting point}
+    
+    Q $\leftarrow$ 0\;
+    R $\leftarrow$ 0\;
+    l $\leftarrow$ $log_2(d)$\;
+    \For{i from l downto 0}{
+        \tcc{Using point doubling}
+        Q $\leftarrow$ [2]Q\; 
+        \If{d[i] == 1}{
+            \tcc{Using point adding}
+            Q $\leftarrow$ Q + P\; 
+        } \Else {
+	    \tcc{R is not used}
+	    R $\leftarrow$ Q + P\; 
+	}
+    }
+    \Return{Q}
+
+    \bigskip
+
+    \caption{Resistant Double-and-Add algorithm}
+    \label{resistent-daa}
+\end{algorithm}
 \end{frame}
 
 
-	\subsubsection{DPA: Differential power analysis}
 
 \begin{frame}
     \frametitle{Differential power analysis}
