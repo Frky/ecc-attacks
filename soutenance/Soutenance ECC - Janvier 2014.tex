@@ -147,7 +147,7 @@
     \subsection{Power analysis}
 
 \begin{frame}
-    \frametitle{Model for processor comsuption power}
+    \frametitle{Model for processor consumption power}
     \begin{itemize}
         \item \textcolor{black} {Each low level instruction consumes a given amount of power $p_{i}$ (depending on the number of clock cycles, registers, etc...)}
         \item \textcolor{black} {Manipulated data impact the power consumption with their hamming weight $h_{data_{i}}$.} 
@@ -165,7 +165,7 @@
     \frametitle{Simple power analysis}
     \begin{itemize}
         \item \textcolor{black} {Need an oscilloscope and a card reader}
-	\item \textcolor{black} {One measurement of the consumption} 
+	\item \textcolor{black} {One measurement of the consumption, use $p_{i}$} 
 	\item \textcolor{black} {Point adding  in EC is more expensive than the point doubling} 
 	\item \textcolor{black} {If the addition is computed then $d[i] = 1$}
     \end{itemize}
@@ -182,7 +182,9 @@
 
 \begin{frame}
     \frametitle{Protection against SPA}
-
+    \begin{itemize}
+        \item \textcolor{black} {INSERER ALGO}
+    \end{itemize}
 \end{frame}
 
 
@@ -191,7 +193,8 @@
 \begin{frame}
     \frametitle{Differential power analysis}
     \begin{itemize}
-        \item \textcolor{black} {...}
+        \item \textcolor{black} {Rely on small variations of power $\alpha_{i}. h_{data_{i}}$}
+	\item \textcolor{black} {Require a lot of experiments, acquisition of many curves}
     \end{itemize}
 \end{frame}
 
@@ -200,7 +203,7 @@
 
     \begin{frame}
         \frametitle{Fault Model}
-            Generally, in smart cards, we consider that we can :
+            Generally, in smart cards, we consider that we can:
             \begin{itemize}
                 \item \color{black}{Inject {\tt 0x00}}
                 \item \color{black}{Inject {\tt 0xFF}}
