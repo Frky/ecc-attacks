@@ -19,6 +19,7 @@
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{algorithm2e}
 \usepackage{empheq}
 
 \usepackage[absolute,showboxes,overlay]{textpos}
@@ -103,10 +104,10 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{What is a side channel attack ?}
+    \frametitle{What is a side channel attack?}
     \begin{itemize}
-        \item \textcolor{black} {take advantage of the interaction between a device and its environment.}
-        \item \textcolor{black} {apply to the embedded world: smartcards}
+        \item \textcolor{black} {Take advantage of the interaction between a device and its environment.}
+        \item \textcolor{black} {Apply to the embedded world: smartcards, microcontrollers}
 	\item \textcolor{black} {All environement variables: time, power consumption, electromagnetic field, acoustic...}
     \end{itemize}
 
@@ -124,14 +125,75 @@
     \begin{itemize}
         \item \textcolor{black} {Do not destroy or alter the functioning of the device}
         \item \textcolor{black} {Cannot be detected by the owner of the device}
+	\item \textcolor{black} {Physical enclosures, auditing capabilities, and attack detectors are ineffective}
+	\item \textcolor{black} {$\implies$ Keys are not revoked !}
     \end{itemize}
 
 \end{frame}
 
     \subsection{Timing attacks}
+
+\begin{frame}
+    \frametitle{Timing attacks}
+    \begin{itemize}
+        \item \textcolor{black} {First discovered side channel attack.}
+        \item \textcolor{black} {Measuring the time dedicated to the computation of an algorithm .} 
+	\item \textcolor{black} {Deduce how many times the program runs into a given loop.} 
+	\item \textcolor{black} {Not used anymore because Power analysis is as simple and more efficient.} 
+    \end{itemize}
+\end{frame}
+
+
     \subsection{Power analysis}
+
+\begin{frame}
+    \frametitle{Model for processor comsuption power}
+    \begin{itemize}
+        \item \textcolor{black} {Each low level instruction consumes a given amount of power $p_{i}$ (depending on the number of clock cycles, registers, etc...)}
+        \item \textcolor{black} {Manipulated data impact the power consumption with their hamming weight $h_{data_{i}}$.} 
+    \end{itemize}
+\begin{center}
+    $ e_{i} = p_{i} + \sum_{j=1}^{n} \alpha_{j}. h_{data_{j,i}}$\\
+\end{center} 
+
+    $ p_{i} \approx 10^{2}.\alpha_{i}. h_{data_{i}}$\\
+\end{frame}
+
         \subsubsection{SPA: Simple power analysis}
-	\subsubsection{SPA: Differential power analysis}
+
+\begin{frame}
+    \frametitle{Simple power analysis}
+    \begin{itemize}
+        \item \textcolor{black} {Need an oscilloscope and a card reader}
+	\item \textcolor{black} {One measurement of the consumption} 
+	\item \textcolor{black} {Point adding  in EC is more expensive than the point doubling} 
+	\item \textcolor{black} {If the addition is computed then $d[i] = 1$}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Can you recover the secret key ?}
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.6]{img/spa.png}
+        \caption{SPA against double-and-add from an IPod touch.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Protection against SPA}
+
+\end{frame}
+
+
+	\subsubsection{DPA: Differential power analysis}
+
+\begin{frame}
+    \frametitle{Differential power analysis}
+    \begin{itemize}
+        \item \textcolor{black} {...}
+    \end{itemize}
+\end{frame}
 
 \section{Perturbation attacks}
     \subsection{Model}
