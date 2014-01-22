@@ -90,10 +90,10 @@
     \frametitle{Introduction}
     \vspace{1cm}
     \begin{description}
-        \item[{\bf Subjet}] High performance computation
-        \item[{\bf Goal}] Perform an attack over DES using HPC methods\\
-	This attack is generic, does not exploit a weakness in DES.
-	It can be applied over symmetric ciphers, hash functions...
+        \item[{\bf Subjet}] Side channel attacks over ECC algorithms.
+        \item[{\bf Goal}] Perform attacks to recover a secret key from a cryptoraphic algorithm using elliptic curve. \\
+	Make an overview of different methods and detail some of them that have an important impact on ECC cryptography.
+	
     \end{description}
 \end{frame}
 
@@ -102,12 +102,36 @@
     \tableofcontents
 \end{frame}
 
+\begin{frame}
+    \frametitle{What is a side channel attack ?}
+    \begin{itemize}
+        \item \textcolor{black} {take advantage of the interaction between a device and its environment.}
+        \item \textcolor{black} {apply to the embedded world: smartcards}
+	\item \textcolor{black} {All environement variables: time, power consumption, electromagnetic field, acoustic...}
+    \end{itemize}
+
+\end{frame}
+
 
 \section{The double-and-add algorithm}
     \subsection{Universality}
     \subsection{Importance}
 
 \section{Non-invasive attacks}
+
+\begin{frame}
+    \frametitle{Non-invasive attacks}
+    \begin{itemize}
+        \item \textcolor{black} {Do not destroy or alter the functioning of the device}
+        \item \textcolor{black} {Cannot be detected by the owner of the device}
+    \end{itemize}
+
+\end{frame}
+
+    \subsection{Timing attacks}
+    \subsection{Power analysis}
+        \subsubsection{SPA: Simple power analysis}
+	\subsubsection{SPA: Differential power analysis}
 
 \section{Perturbation attacks}
     \subsection{Fault Model}
@@ -227,10 +251,9 @@
     \frametitle{Conclusion}
 
     \begin{itemize}
-        \item \textcolor{black}{Low size keys are weak, regardless of the cipher}
-        \item \textcolor{black}{Rainbow table attacks can be efficient}
-        \item \textcolor{black}{Generalizable to hash functions, symmetric ciphers and very scalable.}
-	\item \textcolor{black}{But considering global power calculation, current ciphers are not vulnerable to this attack.}
+        \item \textcolor{black}{These attacks are efficient and not difficult to set up}
+        \item \textcolor{black}{All countermeasures increase the cost of the algorithm}
+	\item \textcolor{black}{Effectiveness depend on the hardware precision of the attacker}
     \end{itemize}
 
 \end{frame}
