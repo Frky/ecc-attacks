@@ -92,7 +92,7 @@
     \vspace{1cm}
     \begin{description}
         \item[{\bf Subjet}] Side channel attacks over ECC algorithms.
-        \item[{\bf Goal}] Perform attacks to recover a secret key from a cryptoraphic algorithm using elliptic curve. \\
+        \item[{\bf Goal}] Perform attacks to recover a secret key from a cryptographic algorithm using elliptic curve. \\
 	Make an overview of different methods and detail some of them that have an important impact on ECC cryptography.
 	
     \end{description}
@@ -255,7 +255,7 @@
     \begin{itemize}
         \item \textcolor{black} {Need an oscilloscope and a card reader}
 	\item \textcolor{black} {One measurement of the consumption, use $p_{i}$} 
-	\item \textcolor{black} {Point adding  in EC is more expensive than the point doubling} 
+	\item \textcolor{black} {Point doubling in EC is more expensive than the point adding} 
 	\item \textcolor{black} {If the addition is computed then $d[i] = 1$}
     \end{itemize}
 \end{frame}
@@ -363,7 +363,7 @@
     \begin{frame}
         \frametitle{Fault Model - How ?}
             \begin{itemize}
-                \item \color{black}{Modifiying {\tt VCC}}
+                \item \color{black}{Modifying {\tt VCC}}
             \end{itemize}
             
             \begin{figure}
@@ -376,7 +376,7 @@
     \begin{frame}
         \frametitle{Fault Model - How ?}
             \begin{itemize}
-                \item \color{black}{Modifiying {\tt VCC}}
+                \item \color{black}{Modifying {\tt VCC}}
                 \item \color{black}{With a laser}
             \end{itemize}
             
@@ -411,7 +411,7 @@
                     with
                     \begin{empheq}[left=\lambda\empheqlbrace]{align*}
                         &\frac{3x_1^2 + 2a_2x_1 + a_4 - a_1y_1}{2y_1 + a_1x_1 + a_3}~if~x_1 = x_2~and~y_1 = y_2\\
-                        &\frac{3x_1^2 + 2a_2x_1 + a_4 - a_1y_1}{2y_1 + a_1x_1 + a_3}~otherwise
+                        &\frac{y_2 - y_1}{x_1 - x_2}~otherwise
                     \end{empheq}
     \end{frame}
     
@@ -449,9 +449,9 @@
         \frametitle{During the computation}
         Notations:
         \begin{itemize}
-            \item $Q^{(i)}$: value of $Q$ at the beginning of the $i^{th}$ round of the computation
-            \item $Q'^{(i)}$: value of $Q$ at the beginning of the $i^{th}$ round of the computation, after the fault injection
-            \item $d[i:j]$ design the $i$ to $j$ bits of $d$ written in Big-Endian
+            \item \color {black} { $Q^{(i)}$: value of $Q$ at the beginning of the $i^{th}$ round of the computation }
+            \item \color {black} { $Q'^{(i)}$: value of $Q$ at the beginning of the $i^{th}$ round of the computation, after the fault injection }
+            \item \color {black} { $d[i:j]$ design the $i$ to $j$ bits of $d$ written in Big-Endian }
         \end{itemize}
 
     \end{frame}
@@ -476,6 +476,22 @@
     \begin{frame}
         \frametitle{During the computation}
         Algorithm template:
+        
+        \begin{algorithm}[H]
+            \small
+
+            \For{j in i..n-1}{
+                \For{x in $2^j$ .. $2^{n - 1}$}{
+                    \For{$R$ mutation of $Q'_x^{(i)}$}{
+                        [...] \;
+                    }
+                }
+            }
+
+        \end{algorithm}
+
+    \end{frame}
+
 
     \end{frame}
 
@@ -526,29 +542,10 @@
         \frametitle{During the computation}
         Then, from $Q'_x^{(i)}$, we:
         \begin{itemize}
-            \item \color{black} { comptue all possible 1-bit mutations of $Q'_x^(i)$ denoted $R$ }
+            \item \color{black} { compute all possible 1-bit mutations of $Q'_x^{(i)}$ denoted $R$ }
             \item \color{black} { compute $Q" = [x]R$}
             \item \color{black} { compare $Q"$ with $Q'$}
         \end{itemize}
-    \end{frame}
-
-    %TODO algo of the attack
-    \begin{frame}
-        \frametitle{During the computation}
-        
-        \begin{algorithm}[H]
-            \small
-
-            \For{j in i..n-1}{
-                \For{x in $2^j$ .. $2^{n - 1}$}{
-                    \For{$R$ mutation of $Q'_x^{(i)}$}{
-                        [...] \;
-                    }
-                }
-            }
-
-        \end{algorithm}
-
     \end{frame}
 
 
