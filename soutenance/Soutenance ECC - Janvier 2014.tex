@@ -272,7 +272,7 @@
 \begin{frame}
     \frametitle{Protection against SPA}
 \begin{algorithm}[H]
-    \footnotesize
+    \tiny
 %    \SetLine % For v3.9
     \SetAlgoLined % For previous releases [?]
    
@@ -467,8 +467,7 @@
 
         {\bf To do that:}
         \begin{itemize}
-            \item \color{black} { Iteration on  $i <= j <= n-1$: first bit of $d[i:]$ to be $1$}
-            \item \color{black} { Iteration on all possible values of $d[j:]$ denoted $x$}
+            \item \color{black} { Iteration on all possible values of $d[i:]$ denoted $x$}
             \item \color{black} { Iteration on all possible values of $Q'^{(i)}$}
         \end{itemize}
     \end{frame}
@@ -480,13 +479,11 @@
         \begin{algorithm}[H]
             \small
 
-            \For{j in i..n-1}{
                 \For{x in $2^j$ .. $2^{n - 1}$}{
                     \For{$R$ mutation of $Q'_x^{(i)}$}{
                         [...] \;
                     }
                 }
-            }
 
         \end{algorithm}
 
